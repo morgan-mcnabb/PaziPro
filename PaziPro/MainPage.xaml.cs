@@ -6,7 +6,7 @@ namespace PaziPro
     {
         private readonly MQTTService _mqttService;
         private readonly WifiService _wifiService;
-        public ObservableCollection<MessageItem> Messages { get; set; } = new ObservableCollection<MessageItem>();
+        public ObservableCollection<MessageItem> Messages { get; set; } = [];
         public MainPage()
         {
             InitializeComponent();
