@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Client;
 
 namespace PaziPro
@@ -89,31 +84,6 @@ namespace PaziPro
                 .Build());
 
             _subscribedTopics.Add(topic);
-
-            /*
-
-
-            if (!_subscribedTopics.Contains(topic))
-            {
-                if (_mqttClient == null || !_mqttClient.IsConnected)
-                {
-                    Console.WriteLine("MQTT client is not connected. Cannot subscribe to topic.");
-                    return;
-                }
-
-                //_mqttClient.ApplicationMessageReceivedAsync -= HandleReceivedApplicationMessage;
-
-                await _mqttClient.SubscribeAsync(new MqttClientSubscribeOptionsBuilder()
-                    .WithTopicFilter(f => { f.WithTopic(topic); })
-                    .Build());
-
-
-                //_mqttClient.ApplicationMessageReceivedAsync += HandleReceivedApplicationMessage;
-
-                Console.WriteLine($"Subscribed to topic {topic}");
-                _subscribedTopics.Add(topic);
-            }
-            */
         }
 
         public async Task UnsubscribeFromTopic(string topic)
