@@ -42,12 +42,21 @@ namespace PaziPro
 
                 _mqttClient.ConnectedAsync += async e =>
                 {
-                    _updateConnectionStatus?.Invoke(true);
-                };
+                    MainThread.BeginInvokeOnMainThread(() => {
+                        _updateConnectionStatus?.Invoke(true);
+                    });
 
+                    await Task.CompletedTask;
+                };
+                
                 _mqttClient.DisconnectedAsync += async e =>
                 {
-                    _updateConnectionStatus?.Invoke(false);
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        _updateConnectionStatus?.Invoke(false);
+                    });
+
+                    await Task.CompletedTask;
                 };
 
                 _mqttClient.ApplicationMessageReceivedAsync += HandleReceivedApplicationMessage;
@@ -59,7 +68,7 @@ namespace PaziPro
             catch (Exception ex)
             {
                 Console.WriteLine($"There was an error connecting to MQTT: {ex.Message}");
-                _displayReceivedMessage?.Invoke("ERROR", "Error connecting to MQTT. Check Settings.");
+                _displayReceivedMessage?.Invoke("ERROR", $"Error connecting to MQTT: {ex.Message}.");
                 _updateConnectionStatus?.Invoke(false);
             }
 
