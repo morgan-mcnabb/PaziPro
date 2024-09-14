@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaziPro.MainPage">
+    <ScrollView>
+        <VerticalStackLayout Padding="30">
+            <Label Text="MyCompany LLC" FontSize="Large" HorizontalOptions="Center" />
+            <Label x:Name="wifiStatusLabel" Text="WiFi Not Connected - (Disabled for Testing)" TextColor="Gray" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
+            <Label Text="Enter WiFi and MQTT Credentials" FontSize="Medium" HorizontalOptions="Center" />
+            <!-- Settings Button to Navigate to SettingsPage -->
+            <Button Text="Settings" Clicked="OnSettingsClicked" />
+
+            <Label x:Name="connectionStatusLabel" Text="MQTT Not Connected" TextColor="Red" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
+
+            <!-- Messages ListView -->
+            <ListView x:Name="messagesListView" ItemsSource="{Binding Messages}" HeightRequest="200">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Clear Messages Button -->
+            <Button Text="Clear Messages" Clicked="OnClearMessagesClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

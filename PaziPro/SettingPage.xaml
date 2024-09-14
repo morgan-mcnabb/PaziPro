@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaziPro.SettingPage"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Padding="30">
+            <Label Text="WiFi and MQTT Settings" FontSize="Large" HorizontalOptions="Center" />
+
+            <Entry Placeholder="WiFi SSID" x:Name="ssid" />
+            <Entry Placeholder="WiFi Password" IsPassword="True" x:Name="password" />
+            <Entry Placeholder="MQTT Server" x:Name="mqttServer" />
+            <Entry Placeholder="MQTT User" x:Name="mqttUser" />
+            <Entry Placeholder="MQTT Password" IsPassword="True" x:Name="mqttPassword" />
+            <Entry Placeholder="Enter MQTT Topic" x:Name="mqttTopic" Text="home/temperature" />
+
+            <Button x:Name="saveButton" Text="Save and Connect" Clicked="OnSaveClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
