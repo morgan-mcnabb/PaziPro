@@ -16,13 +16,20 @@
             <ListView x:Name="messagesListView" ItemsSource="{Binding Messages}" HeightRequest="200">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding}" />
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="{Binding Topic}" FontAttributes="Bold" />
+                                <Label Text="{Binding Message}" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
             <!-- Clear Messages Button -->
             <Button Text="Clear Messages" Clicked="OnClearMessagesClicked" />
+
+            <Button Text="Manage Subscriptions" Clicked="OnManageSubscriptionsClicked" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

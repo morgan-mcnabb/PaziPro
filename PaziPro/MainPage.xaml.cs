@@ -6,7 +6,7 @@ namespace PaziPro
     {
         private readonly MQTTService _mqttService;
         private readonly WifiService _wifiService;
-        public ObservableCollection<string> Messages { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<MessageItem> Messages { get; set; } = new ObservableCollection<MessageItem>();
         public MainPage()
         {
             InitializeComponent();
@@ -41,12 +41,12 @@ namespace PaziPro
         }
 
         // Method to display received MQTT messages
-        private void DisplayReceivedMessage(string message)
+        private void DisplayReceivedMessage(string topic, string message)
         {
             // this is really bad but im doing this for testing :D 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Messages.Add(message);
+                Messages.Add(new MessageItem { Topic = topic, Message = message});
             });
         }
 
@@ -59,6 +59,11 @@ namespace PaziPro
         private void OnSettingsClicked(object sender, EventArgs e)
         {
             Navigation.PushAsync(new SettingPage(_mqttService, _wifiService));
+        }
+
+        private void OnManageSubscriptionsClicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new ManageSubscriptionsPage(_mqttService));
         }
 
         private async Task AttemptAutomaticConnectionAsync()
@@ -96,5 +101,11 @@ namespace PaziPro
                 !string.IsNullOrEmpty(mqttPassword) && !string.IsNullOrEmpty(mqttTopic) &&
                 !string.IsNullOrEmpty(wifiSSID) && !string.IsNullOrEmpty(wifiPassword);
         }
+    }
+
+    public class MessageItem
+    {
+        public string Topic { get; set;}
+        public string Message { get; set; }
     }
 }
