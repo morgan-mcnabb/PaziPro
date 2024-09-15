@@ -2,19 +2,66 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PaziPro.SettingPage"
+             xmlns:vm="clr-namespace:PaziPro.ViewModels"
              Title="Settings">
+    <ContentPage.BindingContext>
+        <vm:SettingsViewModel />
+    </ContentPage.BindingContext>
     <ScrollView>
-        <VerticalStackLayout Padding="30">
-            <Label Text="WiFi and MQTT Settings" FontSize="Large" HorizontalOptions="Center" />
+        <VerticalStackLayout Padding="30" Spacing="10">
 
-            <Entry Placeholder="WiFi SSID" x:Name="ssid" />
-            <Entry Placeholder="WiFi Password" IsPassword="True" x:Name="password" />
-            <Entry Placeholder="MQTT Server" x:Name="mqttServer" />
-            <Entry Placeholder="MQTT User" x:Name="mqttUser" />
-            <Entry Placeholder="MQTT Password" IsPassword="True" x:Name="mqttPassword" />
-            <Entry Placeholder="Enter MQTT Topic" x:Name="mqttTopic" Text="home/temperature" />
+            <!-- WiFi Settings -->
+            <Label Text="WiFi Settings" FontAttributes="Bold" FontSize="Medium" />
 
-            <Button x:Name="saveButton" Text="Save and Connect" Clicked="OnSaveClicked" />
+            <Entry Placeholder="Enter WiFi SSID"
+                   Text="{Binding Ssid}" />
+
+            <!-- WiFi Password with Show/Hide -->
+            <HorizontalStackLayout Spacing="0">
+                <Entry Placeholder="Enter WiFi Password"
+                       Text="{Binding Password}"
+                       IsPassword="{Binding IsPassword}"
+                       HorizontalOptions="FillAndExpand" />
+                <ImageButton Source="{Binding EyeIcon}"
+                             Command="{Binding TogglePasswordVisibilityCommand}"
+                             BackgroundColor="Transparent"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             Margin="0"
+                             Padding="0" />
+            </HorizontalStackLayout>
+
+            <!-- MQTT Settings -->
+            <Label Text="MQTT Settings" FontAttributes="Bold" FontSize="Medium" Margin="0,20,0,0" />
+
+            <Entry Placeholder="Enter MQTT Server"
+                   Text="{Binding MqttServer}" />
+
+            <Entry Placeholder="Enter MQTT User"
+                   Text="{Binding MqttUser}" />
+
+            <!-- MQTT Password with Show/Hide -->
+            <HorizontalStackLayout Spacing="0">
+                <Entry Placeholder="Enter MQTT Password"
+                       Text="{Binding MqttPassword}"
+                       IsPassword="{Binding IsMqttPassword}"
+                       HorizontalOptions="FillAndExpand" />
+                <ImageButton Source="{Binding MqttEyeIcon}"
+                             Command="{Binding ToggleMqttPasswordVisibilityCommand}"
+                             BackgroundColor="Transparent"
+                             WidthRequest="40"
+                             HeightRequest="40"
+                             Margin="0"
+                             Padding="0" />
+            </HorizontalStackLayout>
+
+            <Entry Placeholder="Enter MQTT Topic"
+                   Text="{Binding MqttTopic}" />
+
+            <!-- Save and Connect Button -->
+            <Button Text="Save and Connect"
+                    Clicked="OnSaveClicked"
+                    x:Name="saveButton"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

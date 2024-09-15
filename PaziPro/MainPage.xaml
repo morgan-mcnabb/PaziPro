@@ -4,9 +4,9 @@
              x:Class="PaziPro.MainPage">
     <ScrollView>
         <VerticalStackLayout Padding="30">
-            <Label Text="MyCompany LLC" FontSize="Large" HorizontalOptions="Center" />
-            <Label x:Name="wifiStatusLabel" Text="WiFi Not Connected - (Disabled for Testing)" TextColor="Gray" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
-            <Label Text="Enter WiFi and MQTT Credentials" FontSize="Medium" HorizontalOptions="Center" />
+            <Label Text="PaziPro" FontSize="Large" HorizontalOptions="Center" />
+            <!--<Label x:Name="wifiStatusLabel" Text="WiFi Not Connected - (Disabled for Testing)" TextColor="Gray" FontSize="Medium" HorizontalOptions="Center" Margin="10" />-->
+            <!--<Label Text="Enter WiFi and MQTT Credentials" FontSize="Medium" HorizontalOptions="Center" />-->
             <!-- Settings Button to Navigate to SettingsPage -->
             <Button Text="Settings" Clicked="OnSettingsClicked" />
 
