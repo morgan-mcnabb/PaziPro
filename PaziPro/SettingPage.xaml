@@ -3,84 +3,100 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PaziPro.SettingPage"
              xmlns:vm="clr-namespace:PaziPro.ViewModels"
-             Title="Settings">
+             Title="Settings"
+             BackgroundColor="{StaticResource BackgroundColor}">
     <ContentPage.BindingContext>
         <vm:SettingsViewModel />
     </ContentPage.BindingContext>
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="10">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- WiFi Settings -->
-            <Label Text="WiFi Settings" FontAttributes="Bold" FontSize="Medium" />
+            <Frame CornerRadius="8"
+                   Padding="15"
+                   BackgroundColor="{StaticResource SurfaceColor}">
 
-            <Entry Placeholder="Enter WiFi SSID"
-                   Text="{Binding Ssid}" />
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="WiFi Settings"
+                           Style="{StaticResource SubtitleStyle}" />
 
-            <!-- WiFi Password with Show/Hide -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                    <Entry Placeholder="WiFi SSID"
+                           Text="{Binding Ssid}"
+                           Keyboard="Text" />
 
-                <Entry Grid.Column="0"
-           Placeholder="Enter WiFi Password"
-           Text="{Binding Password}"
-           IsPassword="{Binding IsPassword}"
-           HorizontalOptions="FillAndExpand" />
+                    <!-- WiFi Password with Show/Hide -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                <ImageButton Grid.Column="1"
-                 Source="{Binding EyeIcon}"
-                 Command="{Binding TogglePasswordVisibilityCommand}"
-                 BackgroundColor="Transparent"
-                 WidthRequest="24"
-                 HeightRequest="24"
-                 Aspect="AspectFit"
-                 VerticalOptions="Center"
-                 Margin="5,0,0,0" />
-            </Grid>
+                        <Entry Grid.Column="0"
+                            Placeholder="Enter WiFi Password"
+                            Text="{Binding Password}"
+                            IsPassword="{Binding IsPassword}"
+                            HorizontalOptions="FillAndExpand" />
+
+                        <ImageButton Grid.Column="1"
+                            Source="{Binding EyeIcon}"
+                            Command="{Binding TogglePasswordVisibilityCommand}"
+                            BackgroundColor="Transparent"
+                            WidthRequest="24"
+                            HeightRequest="24"
+                            Aspect="AspectFit"
+                            VerticalOptions="Center"
+                            Margin="5,0,0,0" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
 
 
             <!-- MQTT Settings -->
-            <Label Text="MQTT Settings" FontAttributes="Bold" FontSize="Medium" Margin="0,20,0,0" />
+            <Frame CornerRadius="8"
+                   Padding="15"
+                   BackgroundColor="{StaticResource SurfaceColor}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="MQTT Settings"
+                           Style="{StaticResource SubtitleStyle}" />
 
-            <Entry Placeholder="Enter MQTT Server"
-                   Text="{Binding MqttServer}" />
+                    <Entry Placeholder="MQTT Server"
+                           Text="{Binding MqttServer}"
+                           Keyboard="Url" />
 
-            <Entry Placeholder="Enter MQTT User"
-                   Text="{Binding MqttUser}" />
+                    <Entry Placeholder="Enter MQTT User"
+                           Text="{Binding MqttUser}" 
+                           Keyboard="Text"/>
 
-            <!-- MQTT Password with Show/Hide -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                    <!-- MQTT Password with Show/Hide -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                <Entry Grid.Column="0"
-           Placeholder="Enter MQTT Password"
-           Text="{Binding MqttPassword}"
-           IsPassword="{Binding IsMqttPassword}"
-           HorizontalOptions="FillAndExpand" />
+                        <Entry Grid.Column="0"
+                            Placeholder="Enter MQTT Password"
+                            Text="{Binding MqttPassword}"
+                            IsPassword="{Binding IsMqttPassword}"
+                            HorizontalOptions="FillAndExpand" />
 
-                <ImageButton Grid.Column="1"
-                 Source="{Binding MqttEyeIcon}"
-                 Command="{Binding ToggleMqttPasswordVisibilityCommand}"
-                 BackgroundColor="Transparent"
-                 WidthRequest="24"
-                 HeightRequest="24"
-                 Aspect="AspectFit"
-                 VerticalOptions="Center"
-                 Margin="5,0,0,0" />
-            </Grid>
-
-
-            <Entry Placeholder="Enter MQTT Topic"
-                   Text="{Binding MqttTopic}" />
+                        <ImageButton Grid.Column="1"
+                            Source="{Binding MqttEyeIcon}"
+                            Command="{Binding ToggleMqttPasswordVisibilityCommand}"
+                            BackgroundColor="Transparent"
+                            WidthRequest="24"
+                            HeightRequest="24"
+                            Aspect="AspectFit"
+                            VerticalOptions="Center"
+                            Margin="5,0,0,0" />
+                    </Grid>
+                    <!-- Other MQTT fields -->
+                </VerticalStackLayout>
+            </Frame>
 
             <!-- Save and Connect Button -->
             <Button Text="Save and Connect"
-                    Clicked="OnSaveClicked"
+                    Command="{Binding SaveAndConnectCommand}"
+                    Style="{StaticResource ButtonStyle}" 
                     x:Name="saveButton"/>
         </VerticalStackLayout>
     </ScrollView>

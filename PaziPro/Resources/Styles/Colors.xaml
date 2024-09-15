@@ -42,4 +42,15 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <Color x:Key="PrimaryColor">#6200EE</Color>
+    <Color x:Key="PrimaryVariantColor">#3700B3</Color>
+    <Color x:Key="SecondaryColor">#03DAC6</Color>
+    <Color x:Key="BackgroundColor">#FFFFFF</Color>
+    <Color x:Key="SurfaceColor">#FFFFFF</Color>
+    <Color x:Key="ErrorColor">#B00020</Color>
+    <Color x:Key="OnPrimaryColor">#FFFFFF</Color>
+    <Color x:Key="OnSecondaryColor">#000000</Color>
+    <Color x:Key="OnBackgroundColor">#000000</Color>
+    <Color x:Key="OnSurfaceColor">#000000</Color>
 </ResourceDictionary>

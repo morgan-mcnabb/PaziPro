@@ -1,23 +1,31 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
+using PaziPro.ViewModels;
 
 namespace PaziPro
 {
     public partial class MainPage : ContentPage
     {
-        private readonly MQTTService _mqttService;
-        private readonly WifiService _wifiService;
-        public ObservableCollection<MessageItem> Messages { get; set; } = [];
+        //private readonly MQTTService _mqttService;
+        //private readonly WifiService _wifiService;
+        //public ObservableCollection<MessageItem> Messages { get; set; } = [];
+
+        private readonly MainPageViewModel _vm;
+
         public MainPage()
         {
             InitializeComponent();
-            messagesListView.ItemsSource = Messages;
-            _mqttService = new MQTTService();
-            _wifiService = new WifiService();
+            //messagesListView.ItemsSource = Messages;
+            //_mqttService = new MQTTService();
+            //_wifiService = new WifiService();
 
-            _mqttService.Configure(UpdateConnectionStatus, DisplayReceivedMessage);
+            _vm = new MainPageViewModel(new MQTTService(), new WifiService());
+
+            BindingContext = _vm;
+            //_mqttService.Configure(UpdateConnectionStatus, DisplayReceivedMessage);
         }
 
+        /*
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -128,5 +136,6 @@ namespace PaziPro
     {
         public string Topic { get; set; }
         public string Message { get; set; }
+    }*/
     }
 }
