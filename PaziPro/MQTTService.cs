@@ -41,6 +41,10 @@ namespace PaziPro
                         _updateConnectionStatus?.Invoke(true);
                     });
 
+                    foreach(var topic in _subscribedTopics) {
+                        await _mqttClient.SubscribeAsync(topic);   
+                    }
+
                     await Task.CompletedTask;
                 };
                 
@@ -50,6 +54,8 @@ namespace PaziPro
                     {
                         _updateConnectionStatus?.Invoke(false);
                     });
+
+                    //add automatic reconnect soon
 
                     await Task.CompletedTask;
                 };
@@ -68,8 +74,8 @@ namespace PaziPro
             }
 
             Console.WriteLine("The MQTT client is connected.");
-
         }
+
 
         public async Task SubscribeToTopic(string topic)
         {

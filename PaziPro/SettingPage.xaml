@@ -17,19 +17,29 @@
                    Text="{Binding Ssid}" />
 
             <!-- WiFi Password with Show/Hide -->
-            <HorizontalStackLayout Spacing="0">
-                <Entry Placeholder="Enter WiFi Password"
-                       Text="{Binding Password}"
-                       IsPassword="{Binding IsPassword}"
-                       HorizontalOptions="FillAndExpand" />
-                <ImageButton Source="{Binding EyeIcon}"
-                             Command="{Binding TogglePasswordVisibilityCommand}"
-                             BackgroundColor="Transparent"
-                             WidthRequest="40"
-                             HeightRequest="40"
-                             Margin="0"
-                             Padding="0" />
-            </HorizontalStackLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Entry Grid.Column="0"
+           Placeholder="Enter WiFi Password"
+           Text="{Binding Password}"
+           IsPassword="{Binding IsPassword}"
+           HorizontalOptions="FillAndExpand" />
+
+                <ImageButton Grid.Column="1"
+                 Source="{Binding EyeIcon}"
+                 Command="{Binding TogglePasswordVisibilityCommand}"
+                 BackgroundColor="Transparent"
+                 WidthRequest="24"
+                 HeightRequest="24"
+                 Aspect="AspectFit"
+                 VerticalOptions="Center"
+                 Margin="5,0,0,0" />
+            </Grid>
+
 
             <!-- MQTT Settings -->
             <Label Text="MQTT Settings" FontAttributes="Bold" FontSize="Medium" Margin="0,20,0,0" />
@@ -41,19 +51,29 @@
                    Text="{Binding MqttUser}" />
 
             <!-- MQTT Password with Show/Hide -->
-            <HorizontalStackLayout Spacing="0">
-                <Entry Placeholder="Enter MQTT Password"
-                       Text="{Binding MqttPassword}"
-                       IsPassword="{Binding IsMqttPassword}"
-                       HorizontalOptions="FillAndExpand" />
-                <ImageButton Source="{Binding MqttEyeIcon}"
-                             Command="{Binding ToggleMqttPasswordVisibilityCommand}"
-                             BackgroundColor="Transparent"
-                             WidthRequest="40"
-                             HeightRequest="40"
-                             Margin="0"
-                             Padding="0" />
-            </HorizontalStackLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Entry Grid.Column="0"
+           Placeholder="Enter MQTT Password"
+           Text="{Binding MqttPassword}"
+           IsPassword="{Binding IsMqttPassword}"
+           HorizontalOptions="FillAndExpand" />
+
+                <ImageButton Grid.Column="1"
+                 Source="{Binding MqttEyeIcon}"
+                 Command="{Binding ToggleMqttPasswordVisibilityCommand}"
+                 BackgroundColor="Transparent"
+                 WidthRequest="24"
+                 HeightRequest="24"
+                 Aspect="AspectFit"
+                 VerticalOptions="Center"
+                 Margin="5,0,0,0" />
+            </Grid>
+
 
             <Entry Placeholder="Enter MQTT Topic"
                    Text="{Binding MqttTopic}" />

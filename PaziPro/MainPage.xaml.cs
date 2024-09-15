@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.Json;
 
 namespace PaziPro
 {
@@ -26,12 +27,12 @@ namespace PaziPro
 
         private void UpdateWiFiConnectionStatus(bool isConnected)
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                wifiStatusLabel.Text = isConnected ? "WiFi Connected - (Disabled for Testing)" : "WiFi Not Connected - (Disabled for Testing)";
-                //wifiStatusLabel.TextColor = isConnected ? Colors.Green : Colors.Red;
-                wifiStatusLabel.TextColor = isConnected ? Colors.Gray : Colors.Gray;
-            });
+            //MainThread.BeginInvokeOnMainThread(() =>
+            //{
+            //    wifiStatusLabel.Text = isConnected ? "WiFi Connected - (Disabled for Testing)" : "WiFi Not Connected - (Disabled for Testing)";
+            //    //wifiStatusLabel.TextColor = isConnected ? Colors.Green : Colors.Red;
+            //    wifiStatusLabel.TextColor = isConnected ? Colors.Gray : Colors.Gray;
+            //});
         }
 
         private void UpdateConnectionStatus(bool isConnected)
@@ -46,7 +47,7 @@ namespace PaziPro
             // this is really bad but im doing this for testing :D 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Messages.Add(new MessageItem { Topic = topic, Message = message});
+                Messages.Add(new MessageItem { Topic = topic, Message = message });
             });
         }
 
@@ -82,13 +83,33 @@ namespace PaziPro
                 // Connect to MQTT
                 if (!_mqttService.IsConnected)
                 {
-                    await _mqttService.Connect_Client(mqttServer, mqttUser, mqttPassword);
-                    await _mqttService.SubscribeToTopic(mqttTopic);
+                    try
+                    {
+                        await _mqttService.Connect_Client(mqttServer, mqttUser, mqttPassword);
+                        await SubscribeToSavedTopics();
+                    }
+                    catch (Exception ex)
+                    {
+                        await DisplayAlert("Connection Error", $"An error occurred: {ex.Message}", "OK");
+                    }
                 }
             }
             else
             {
                 Console.WriteLine("No stored credentials found. Automatic connection skipped.");
+            }
+        }
+
+        private async Task SubscribeToSavedTopics()
+        {
+            string json = Preferences.Get("SubscribedTopics", string.Empty);
+            if (!string.IsNullOrEmpty(json))
+            {
+                var topics = JsonSerializer.Deserialize<List<string>>(json);
+                foreach (var topic in topics)
+                {
+                    await _mqttService.SubscribeToTopic(topic);
+                }
             }
         }
 
@@ -105,7 +126,7 @@ namespace PaziPro
 
     public class MessageItem
     {
-        public string Topic { get; set;}
+        public string Topic { get; set; }
         public string Message { get; set; }
     }
 }

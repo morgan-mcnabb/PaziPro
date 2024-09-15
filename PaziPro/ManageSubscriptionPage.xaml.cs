@@ -5,20 +5,23 @@ namespace PaziPro
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ManageSubscriptionsPage : ContentPage
     {
-        private readonly MQTTService _MQTTService;
-        public ObservableCollection<string> SubscribedTopics { get; set; } = new ObservableCollection<string>();
+        //private readonly MQTTService _MQTTService;
+        //public ObservableCollection<string> SubscribedTopics { get; set; } = new ObservableCollection<string>();
 
-        public ManageSubscriptionsPage(MQTTService MQTTService)
+        public ManageSubscriptionsPage(MQTTService mqttService)
         {
             InitializeComponent();
-            _MQTTService = MQTTService;
+            //_MQTTService = MQTTService;
+
+            BindingContext = new ViewModels.ManageSubscriptionsViewModel(mqttService);
 
             // Load subscribed topics
-            LoadSubscribedTopics();
+            //LoadSubscribedTopics();
 
-            subscriptionsCollectionView.ItemsSource = SubscribedTopics;
+            //subscriptionsCollectionView.ItemsSource = SubscribedTopics;
         }
 
+        /*
         private void LoadSubscribedTopics()
         {
             SubscribedTopics.Clear();
@@ -56,5 +59,6 @@ namespace PaziPro
                 SubscribedTopics.Remove(topic);
             }
         }
+        */
     }
 }

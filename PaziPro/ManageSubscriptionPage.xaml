@@ -2,14 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PaziPro.ManageSubscriptionsPage"
+             xmlns:vm="clr-namespace:PaziPro.ViewModels"
+             xmlns:maui="clr-namespace:Microsoft.Maui.Controls;assembly=Microsoft.Maui.Controls"
              Title="Manage Subscriptions">
-    <VerticalStackLayout Padding="20">
-        <Entry x:Name="newTopicEntry" Placeholder="Enter topic to subscribe" />
-        <Button Text="Subscribe" Clicked="OnSubscribeClicked" />
 
-        <Label Text="Subscribed Topics:" FontAttributes="Bold" Margin="0,20,0,0" />
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Entry Placeholder="Enter topic to subscribe"
+               Text="{Binding NewTopic}" />
 
-        <CollectionView x:Name="subscriptionsCollectionView" SelectionMode="None">
+        <Button Text="Subscribe"
+                Command="{Binding SubscribeCommand}" />
+
+        <Label Text="Subscribed Topics:"
+               FontAttributes="Bold"
+               Margin="0,20,0,0" />
+
+        <CollectionView ItemsSource="{Binding SubscribedTopics}"
+                        SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -17,11 +26,12 @@
                             <SwipeItems>
                                 <SwipeItem Text="Unsubscribe"
                                            BackgroundColor="Red"
-                                           Invoked="OnUnsubscribeSwiped" />
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type maui:ContentPage}}, Path=BindingContext.UnsubscribeCommand}"
+                                           CommandParameter="{Binding .}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Grid Padding="10">
-                            <Label Text="{Binding}" VerticalOptions="Center" />
+                            <Label Text="{Binding .}" VerticalOptions="Center" />
                         </Grid>
                     </SwipeView>
                 </DataTemplate>
