@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace PaziPro.ViewModels
@@ -60,18 +55,14 @@ namespace PaziPro.ViewModels
             _mqttService = mqttService;
             _wifiService = wifiService;
 
-            // Initialize properties
             ConnectionStatus = "Disconnected";
             IsConnected = false;
 
-            // Initialize commands
             NavigateToSettingsCommand = new Command(async () => await NavigateToSettings());
             NavigateToManageSubscriptionsCommand = new Command(async () => await NavigateToManageSubscriptions());
 
-            // Configure MQTT Service with callbacks
             _mqttService.Configure(UpdateConnectionStatus, DisplayReceivedMessage);
 
-            // Attempt automatic connection
             _ = AttemptAutomaticConnectionAsync();
         }
 
@@ -79,10 +70,6 @@ namespace PaziPro.ViewModels
         {
             try
             {
-                // Delay to allow network initialization
-                //await Task.Delay(2000);
-
-                // Check network access
                 if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
                 {
                     Console.WriteLine("No internet connection available.");
@@ -90,20 +77,15 @@ namespace PaziPro.ViewModels
                     return;
                 }
 
-                // Load stored credentials
                 string ssid = Preferences.Get("wifiSSID", string.Empty);
                 string wifiPassword = await SecureStorage.GetAsync("wifiPassword") ?? string.Empty;
                 string mqttServer = Preferences.Get("mqttServer", string.Empty);
                 string mqttUser = Preferences.Get("mqttUser", string.Empty);
                 string mqttPassword = await SecureStorage.GetAsync("mqttPassword") ?? string.Empty;
 
-                // Check if credentials are present
                 if (CredentialsStored(mqttServer, mqttUser, mqttPassword, ssid, wifiPassword))
                 {
-                    //UpdateWiFiConnectionStatus(false);
 
-                    // Connect to WiFi
-                    //bool wifiConnected = await _wifiService.ConnectToWiFi(ssid, wifiPassword);
                     var wifiConnected = true;
                     if (wifiConnected)
                     {
@@ -180,7 +162,6 @@ namespace PaziPro.ViewModels
             return Application.Current.MainPage.DisplayAlert(title, message, "OK");
         }
 
-        // Implement INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -199,7 +180,6 @@ namespace PaziPro.ViewModels
         }
     }
 
-    // Define a MessageItem class
     public class MessageItem
     {
         public string Topic { get; set; }

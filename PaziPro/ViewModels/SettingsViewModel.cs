@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows.Input;
-using Microsoft.Maui.Controls;
 
 namespace PaziPro.ViewModels
 {
@@ -170,7 +164,6 @@ namespace PaziPro.ViewModels
             }
         }
 
-        // Methods
         private void TogglePasswordVisibility()
         {
             IsPassword = !IsPassword;
@@ -183,7 +176,6 @@ namespace PaziPro.ViewModels
             MqttEyeIcon = IsMqttPassword ? "eye_on.png" : "eye_off.png";
         }
 
-        // PropertyChanged Implementation
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

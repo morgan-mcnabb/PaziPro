@@ -46,7 +46,7 @@ namespace PaziPro
                     await _mqttService.Connect_Client(_vm.MqttServer, _vm.MqttUser, _vm.MqttPassword);
 
 
-                string topic = _vm.MqttTopic;  // Get the topic from the user input
+                string topic = _vm.MqttTopic;  
                 await _mqttService.SubscribeToTopic(topic);
 
                 await Navigation.PopAsync();
@@ -83,9 +83,7 @@ namespace PaziPro
             _vm.MqttTopic = Preferences.Get("mqttTopic", string.Empty);
 
             _vm.Password = await SecureStorage.GetAsync("wifiPassword") ?? string.Empty;
-            //password.Text = await SecureStorage.GetAsync("wifiPassword") ?? string.Empty;
             _vm.MqttPassword = await SecureStorage.GetAsync("mqttPassword") ?? string.Empty;
-            //mqttPassword.Text = await SecureStorage.GetAsync("mqttPassword") ?? string.Empty;
         }
     }
 }
