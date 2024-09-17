@@ -16,6 +16,8 @@ namespace PaziPro
             _wifiService = wifiService;
             _vm = (SettingsViewModel)BindingContext;
 
+            BindingContext = _vm;
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 saveButton.IsEnabled = false;

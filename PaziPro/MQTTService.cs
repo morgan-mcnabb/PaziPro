@@ -1,5 +1,6 @@
 ﻿using MQTTnet;
 using MQTTnet.Client;
+using Plugin.LocalNotification;
 
 namespace PaziPro
 {
@@ -111,8 +112,23 @@ namespace PaziPro
         {
             string payload = System.Text.Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             string topic = e.ApplicationMessage.Topic;
-            Console.WriteLine($"Message received on topic {e.ApplicationMessage.Topic}: {payload}");
+
             _displayReceivedMessage?.Invoke(topic, payload);
+
+            if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+            {
+                await LocalNotificationCenter.Current.RequestNotificationPermission();
+            }
+
+            var notification = new NotificationRequest
+            {
+                NotificationId = 100,
+                Title = topic,
+                Description = payload,
+                ReturningData = "Dummy data", // Returning data when tapped on notification.
+            };
+            await LocalNotificationCenter.Current.Show(notification);
+
             await Task.CompletedTask;
         }
     }
