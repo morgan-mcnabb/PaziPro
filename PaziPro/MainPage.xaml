@@ -1,28 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PaziPro.MainPage">
+             x:Class="PaziPro.MainPage"
+             Title="Home"
+             xmlns:vm="clr-namespace:PaziPro.ViewModels"
+             BackgroundColor="{StaticResource BackgroundColor}">
     <ScrollView>
-        <VerticalStackLayout Padding="30">
-            <Label Text="MyCompany LLC" FontSize="Large" HorizontalOptions="Center" />
-            <Label x:Name="wifiStatusLabel" Text="WiFi Not Connected - (Disabled for Testing)" TextColor="Gray" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
-            <Label Text="Enter WiFi and MQTT Credentials" FontSize="Medium" HorizontalOptions="Center" />
-            <!-- Settings Button to Navigate to SettingsPage -->
-            <Button Text="Settings" Clicked="OnSettingsClicked" />
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Header -->
+            <Label Text="PaziPro"
+                   Style="{StaticResource TitleStyle}"
+                   HorizontalOptions="Center" />
 
-            <Label x:Name="connectionStatusLabel" Text="MQTT Not Connected" TextColor="Red" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
+            <!-- Connection Status -->
+            <Label Text="{Binding ConnectionStatusText}"
+                   TextColor="{Binding ConnectionStatusColor}"
+                   FontSize="Medium"
+                   HorizontalOptions="Center" />
 
-            <!-- Messages ListView -->
-            <ListView x:Name="messagesListView" ItemsSource="{Binding Messages}" HeightRequest="200">
-                <ListView.ItemTemplate>
+            <!-- Navigation Buttons -->
+            <HorizontalStackLayout Spacing="10"
+                                   HorizontalOptions="Center">
+                <Button Text="Settings"
+                        Command="{Binding NavigateToSettingsCommand}"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Text="Subscriptions"
+                        Command="{Binding NavigateToManageSubscriptionsCommand}"
+                        Style="{StaticResource ButtonStyle}" />
+            </HorizontalStackLayout>
+
+            <!-- Messages CollectionView -->
+            <CollectionView ItemsSource="{Binding Messages}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding}" />
+                        <Frame Padding="10"
+                               Margin="0,5"
+                               HasShadow="True"
+                               CornerRadius="8"
+                               BackgroundColor="{StaticResource SurfaceColor}">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Topic}"
+                                       FontAttributes="Bold"
+                                       Style="{StaticResource SubtitleStyle}" />
+                                <Label Text="{Binding Message}"
+                                       Style="{StaticResource BodyStyle}" />
+                            </VerticalStackLayout>
+                        </Frame>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <!-- Clear Messages Button -->
-            <Button Text="Clear Messages" Clicked="OnClearMessagesClicked" />
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

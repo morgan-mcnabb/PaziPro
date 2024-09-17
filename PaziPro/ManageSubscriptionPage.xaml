@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaziPro.ManageSubscriptionsPage"
+             xmlns:vm="clr-namespace:PaziPro.ViewModels"
+             xmlns:maui="clr-namespace:Microsoft.Maui.Controls;assembly=Microsoft.Maui.Controls"
+             Title="Manage Subscriptions"
+             BackgroundColor="{StaticResource BackgroundColor}">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="20">
+
+                <!-- Page Title -->
+                <Label Text="Manage Subscriptions"
+                       Style="{StaticResource TitleStyle}"
+                       HorizontalOptions="Center" />
+
+                <!-- Input Section -->
+                <Frame CornerRadius="8"
+                       Padding="15"
+                       BackgroundColor="{StaticResource SurfaceColor}">
+                    <VerticalStackLayout Spacing="10">
+                        <Entry Placeholder="Enter topic to subscribe"
+                               Text="{Binding NewTopic}"
+                               Keyboard="Text"
+                               AutomationProperties.Name="New Topic Entry" />
+
+                        <Button Text="Subscribe"
+                                Command="{Binding SubscribeCommand}"
+                                Style="{StaticResource ButtonStyle}"
+                                AutomationProperties.Name="Subscribe Button" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Subscribed Topics List -->
+                <Label Text="Subscribed Topics"
+                       Style="{StaticResource SubtitleStyle}" />
+
+                <CollectionView ItemsSource="{Binding SubscribedTopics}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem Text="Unsubscribe"
+                                                   BackgroundColor="{StaticResource ErrorColor}"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.UnsubscribeCommand}"
+                                                   CommandParameter="{Binding .}"
+                                                   IconImageSource="unsubscribe_icon.png"
+                                                   AutomationProperties.Name="Unsubscribe Swipe Action" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Frame Padding="10"
+                                       Margin="0,5"
+                                       HasShadow="True"
+                                       CornerRadius="8"
+                                       BackgroundColor="{StaticResource SurfaceColor}">
+                                    <Label Text="{Binding .}"
+                                           Style="{StaticResource BodyStyle}" />
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

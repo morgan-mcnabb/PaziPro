@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Client;
 
 namespace PaziPro
@@ -11,18 +6,17 @@ namespace PaziPro
     public class MQTTService
     {
         private IMqttClient _mqttClient;
+        private HashSet<string> _subscribedTopics = [];
         private string _server;
-        private List<string> _subscribedTopics;
         private Action<bool> _updateConnectionStatus;
-        private Action<string> _displayReceivedMessage;
+        private Action<string, string> _displayReceivedMessage;
 
         public MQTTService() { }
 
-        public void Configure(Action<bool> updateConnectionStatus, Action<string> displayReceivedMessage)
+        public void Configure(Action<bool> updateConnectionStatus, Action<string, string> displayReceivedMessage)
         {
             _updateConnectionStatus = updateConnectionStatus;
             _displayReceivedMessage = displayReceivedMessage;
-            _subscribedTopics = new List<string>();
         }
         public bool IsConnected => _mqttClient != null && _mqttClient.IsConnected;
 
@@ -41,6 +35,33 @@ namespace PaziPro
                     .WithCleanSession()
                     .Build();
 
+                _mqttClient.ConnectedAsync += async e =>
+                {
+                    MainThread.BeginInvokeOnMainThread(() => {
+                        _updateConnectionStatus?.Invoke(true);
+                    });
+
+                    foreach(var topic in _subscribedTopics) {
+                        await _mqttClient.SubscribeAsync(topic);   
+                    }
+
+                    await Task.CompletedTask;
+                };
+                
+                _mqttClient.DisconnectedAsync += async e =>
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        _updateConnectionStatus?.Invoke(false);
+                    });
+
+                    //add automatic reconnect soon
+
+                    await Task.CompletedTask;
+                };
+
+                _mqttClient.ApplicationMessageReceivedAsync += HandleReceivedApplicationMessage;
+
                 await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
                 Console.WriteLine("Connected");
                 _updateConnectionStatus?.Invoke(true);
@@ -48,43 +69,50 @@ namespace PaziPro
             catch (Exception ex)
             {
                 Console.WriteLine($"There was an error connecting to MQTT: {ex.Message}");
-                _displayReceivedMessage?.Invoke("ERROR: Error connected to MQTT. Check Settings.");
+                _displayReceivedMessage?.Invoke("ERROR", $"Error connecting to MQTT: {ex.Message}.");
                 _updateConnectionStatus?.Invoke(false);
             }
 
             Console.WriteLine("The MQTT client is connected.");
-
         }
+
 
         public async Task SubscribeToTopic(string topic)
         {
-            if (!_subscribedTopics.Contains(topic))
-            {
-                if (_mqttClient == null || !_mqttClient.IsConnected)
-                {
-                    Console.WriteLine("MQTT client is not connected. Cannot subscribe to topic.");
-                    return;
-                }
+            if(_mqttClient == null || !_mqttClient.IsConnected)
+                return;
 
-                _mqttClient.ApplicationMessageReceivedAsync -= HandleReceivedApplicationMessage;
+            if(_subscribedTopics.Contains(topic))
+                return;
 
-                await _mqttClient.SubscribeAsync(new MqttClientSubscribeOptionsBuilder()
-                    .WithTopicFilter(f => { f.WithTopic(topic); })
-                    .Build());
+            await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder()
+                .WithTopic(topic)
+                .Build());
 
-
-                _mqttClient.ApplicationMessageReceivedAsync += HandleReceivedApplicationMessage;
-
-                Console.WriteLine($"Subscribed to topic {topic}");
-                _subscribedTopics.Add(topic);
-            }
+            _subscribedTopics.Add(topic);
         }
+
+        public async Task UnsubscribeFromTopic(string topic)
+        {
+            if(_mqttClient == null || !_mqttClient.IsConnected)
+                return;
+
+            if(!_subscribedTopics.Contains(topic))
+                return;
+
+            await _mqttClient.UnsubscribeAsync(topic);
+            _subscribedTopics.Remove(topic);
+        }
+
+        public IEnumerable<string> GetSubscribedTopics() { return _subscribedTopics; }
+
 
         private async Task HandleReceivedApplicationMessage(MqttApplicationMessageReceivedEventArgs e)
         {
             string payload = System.Text.Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
+            string topic = e.ApplicationMessage.Topic;
             Console.WriteLine($"Message received on topic {e.ApplicationMessage.Topic}: {payload}");
-            _displayReceivedMessage?.Invoke($"Messaged received: {payload}");
+            _displayReceivedMessage?.Invoke(topic, payload);
             await Task.CompletedTask;
         }
     }

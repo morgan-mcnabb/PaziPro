@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PaziPro.ViewModels;
 
 namespace PaziPro
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingPage : ContentPage
     {
         private readonly MQTTService _mqttService;
         private readonly WifiService _wifiService;
+        private SettingsViewModel _vm;
 
         public SettingPage(MQTTService mqttService, WifiService wifiService)
         {
             InitializeComponent();
             _mqttService = mqttService;
             _wifiService = wifiService;
+            _vm = (SettingsViewModel)BindingContext;
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 saveButton.IsEnabled = false;
@@ -25,7 +24,6 @@ namespace PaziPro
 
         protected override async void OnAppearing()
         {
-
             base.OnAppearing();
             await LoadUserSettingsAsync();
             MainThread.BeginInvokeOnMainThread(() =>
@@ -36,7 +34,7 @@ namespace PaziPro
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            bool wifiConnected = await _wifiService.ConnectToWiFi(ssid.Text, password.Text);
+            bool wifiConnected = await _wifiService.ConnectToWiFi(_vm.Ssid, _vm.Password);
 
             wifiConnected = true;
             if (wifiConnected)
@@ -45,10 +43,10 @@ namespace PaziPro
                 //UpdateWiFiConnectionStatus(true);
 
                 if (!_mqttService.IsConnected)
-                    await _mqttService.Connect_Client(mqttServer.Text, mqttUser.Text, mqttPassword.Text);
+                    await _mqttService.Connect_Client(_vm.MqttServer, _vm.MqttUser, _vm.MqttPassword);
 
 
-                string topic = mqttTopic.Text;  // Get the topic from the user input
+                string topic = _vm.MqttTopic;  
                 await _mqttService.SubscribeToTopic(topic);
 
                 await Navigation.PopAsync();
@@ -61,27 +59,31 @@ namespace PaziPro
 
         private async Task SaveUserSettingsAsync()
         {
-            Preferences.Set("wifiSSID", ssid.Text);
-            Preferences.Set("mqttServer", mqttServer.Text);
-            Preferences.Set("mqttUser", mqttUser.Text);
-            Preferences.Set("mqttTopic", mqttTopic.Text);
+            Preferences.Set("wifiSSID", _vm.Ssid);
+            Preferences.Set("mqttServer", _vm.MqttServer);
+            Preferences.Set("mqttUser", _vm.MqttUser);
+            Preferences.Set("mqttTopic", _vm.MqttTopic);
 
-            if(!string.IsNullOrEmpty(password.Text))
-                await SecureStorage.SetAsync("wifiPassword", password.Text);
+            if(!string.IsNullOrEmpty(_vm.Password))
+                await SecureStorage.SetAsync("wifiPassword", _vm.Password);
+            else
+                SecureStorage.Remove("wifiPassword");
             
-            if(!string.IsNullOrEmpty(mqttPassword.Text))
-                await SecureStorage.SetAsync("mqttPassword", mqttPassword.Text);
+            if(!string.IsNullOrEmpty(_vm.MqttPassword))
+                await SecureStorage.SetAsync("mqttPassword", _vm.MqttPassword);
+            else
+                SecureStorage.Remove("mqttPassword");
         }
 
         private async Task LoadUserSettingsAsync()
         {
-            ssid.Text = Preferences.Get("wifiSSID", string.Empty);
-            mqttServer.Text = Preferences.Get("mqttServer", string.Empty);
-            mqttUser.Text = Preferences.Get("mqttUser", string.Empty);
-            mqttTopic.Text = Preferences.Get("mqttTopic", string.Empty);
+            _vm.Ssid = Preferences.Get("wifiSSID", string.Empty);
+            _vm.MqttServer = Preferences.Get("mqttServer", string.Empty);
+            _vm.MqttUser = Preferences.Get("mqttUser", string.Empty);
+            _vm.MqttTopic = Preferences.Get("mqttTopic", string.Empty);
 
-            password.Text = await SecureStorage.GetAsync("wifiPassword") ?? string.Empty;
-            mqttPassword.Text = await SecureStorage.GetAsync("mqttPassword") ?? string.Empty;
+            _vm.Password = await SecureStorage.GetAsync("wifiPassword") ?? string.Empty;
+            _vm.MqttPassword = await SecureStorage.GetAsync("mqttPassword") ?? string.Empty;
         }
     }
 }
